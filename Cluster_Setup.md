@@ -98,11 +98,11 @@ sudo apt-get install cassandra
 
 sudo service cassandra start
 
-#be sure to stop it if you need to make any configuration changes.
-sudo service cassandra stop
-
 # Verify that Cassandra is running by invoking nodetool status from the command line.
 nodetool status
+
+#be sure to stop it if you need to make any configuration changes.
+sudo service cassandra stop
 ```
 
 ## Step 4 - Configure and Start Spark from master

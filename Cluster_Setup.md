@@ -96,6 +96,7 @@ sudo apt-get update
 # Install Cassandra:
 sudo apt-get install cassandra
 
+
 sudo service cassandra start
 
 # Verify that Cassandra is running by invoking nodetool status from the command line.
@@ -152,4 +153,85 @@ UN  198.23.84.75  174.75 KiB  256          65.9%             9fb79704-6b42-467f-
 You can also check if you can connect to the cluster using cqlsh, the Cassandra command line client. Note that you can specify the IP address of any node in the cluster for this command.
 ```
 cqlsh 198.23.84.68 9042
+```
+
+## Step 6 - Install Jupyter Notebook on master
+You can refer to https://techknight.eu/2016/01/03/setup-jupyter-notebook-centosrhel-7/ and https://www.youtube.com/watch?v=uhVYTNEe_-A to learn more.
+
+Python2 is already installed with spark package. You can check the version `python --version` or start pyspark `$SPARK_HOME/bin/pyspark` to confirm.
+
+Install packages and jupyter using below commands. Pandas is useful for later analysis but not necessary in this step.
+```
+apt-get update
+apt-get -y install python-pip python-dev
+# pip install --upgrade pip
+pip install pandas
+pip install jupyter
+```
+
+Next, generate a configuration file.
+```
+jupyter notebook --generate-config
+```
+And you should see an output like this where the path for the configuration file will be defined.
+```
+Writing default config to: /root/.jupyter/jupyter_notebook_config.py
+```
+
+Open python in the terminal with python and enter the commands below and remember to copy the hashed password. click Enter for the password. Then exit python.
+```
+>>> from notebook.auth import passwd
+>>> passwd()
+Enter password:
+Verify password:
+'sha1:43352c81e857:b3238223de81faff7afda3c18b79c7fe8e192fdc'
+```
+
+If you don’t have a valid certificate you should use a self-signed certificate to be able to use https://
+```
+openssl req -x509 -nodes -days 365 -newkey rsa:1024 -keyout mykey.key -out mycert.pem
+```
+Now, we can update /root/.jupyter/jupyter_notebook_config.py with below contents.
+``` 
+c.NotebookApp.allow_root = True
+# paste the hashed password in the string
+c.NotebookApp.password = u''
+c.NotebookApp.ip = '*'
+c.NotebookApp.certfile = u'./mycert.pem'
+c.NotebookApp.keyfile = u'./mykey.key'
+c.NotebookApp.open_browser = False
+```
+Open port 8888 in the firewall
+```
+apt install firewalld
+firewall-cmd --zone=public --add-port=8888/tcp --permanent
+systemctl restart firewalld
+```
+Configure .bashrc and add below to the bottom of the file
+```
+function snotebook () 
+{
+#Spark path (based on your computer)
+SPARK_PATH=/usr/local/spark
+
+export PYSPARK_DRIVER_PYTHON="jupyter"
+export PYSPARK_DRIVER_PYTHON_OPTS="notebook"
+
+# For python 3 users, you have to add the line below or you will get an error 
+#export PYSPARK_PYTHON=python3
+
+$SPARK_PATH/bin/pyspark --master local[2]
+}
+```
+```
+source .bashrc
+```
+
+Now you can start jupyter notebook using `snotebook` and go to http://198.23.84.68:8888 using token shown when you start the notebook as the example below.
+```
+[C 18:11:07.395 NotebookApp]
+
+    Copy/paste this URL into your browser when you connect for the first time,
+    to login with a token:
+        http://localhost:8888/?token=900246c39ae1875c37b5b7013f7649138726daafbae8fef6
 ```

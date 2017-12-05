@@ -137,7 +137,6 @@ Start cassandra on each node
 cd /usr/sbin/
 sudo sh cassandra -R
 ```
-
 Go to any one of the node and check the status using `nodetool status`. You would see below output.
 ```
 Datacenter: datacenter1
@@ -167,7 +166,7 @@ apt-get -y install python-pip python-dev
 # pip install --upgrade pip
 pip install pandas
 pip install jupyter
-How```
+```
 
 Next, generate a configuration file.
 ```

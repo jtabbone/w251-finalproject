@@ -167,7 +167,7 @@ apt-get -y install python-pip python-dev
 # pip install --upgrade pip
 pip install pandas
 pip install jupyter
-```
+How```
 
 Next, generate a configuration file.
 ```
@@ -227,11 +227,16 @@ $SPARK_PATH/bin/pyspark --master local[2]
 source .bashrc
 ```
 
-Now you can start jupyter notebook using `snotebook` and go to http://198.23.84.68:8888 using token shown when you start the notebook as the example below.
+Now you can start jupyter notebook using `jupyter notebook` and go to http://198.23.84.68:8888 using token shown when you start the notebook as the example below.
 ```
 [C 18:11:07.395 NotebookApp]
 
     Copy/paste this URL into your browser when you connect for the first time,
     to login with a token:
         http://localhost:8888/?token=900246c39ae1875c37b5b7013f7649138726daafbae8fef6
+```
+However using 'jupyter notebook' command will not enable pyspark in jupyter notebook. If you want to use pyspark, please use below commmand.
+```
+source .bashrc
+snotebook
 ```

@@ -234,7 +234,7 @@ Now you can start jupyter notebook using `jupyter notebook` and go to http://198
     to login with a token:
         http://localhost:8888/?token=900246c39ae1875c37b5b7013f7649138726daafbae8fef6
 ```
-However using 'jupyter notebook' command will not enable pyspark in jupyter notebook. If you want to use pyspark, please use below commmand.
+However using `jupyter notebook` command will not enable pyspark in jupyter notebook. If you want to use pyspark, please use below commmand.
 ```
 source .bashrc
 snotebook
